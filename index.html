@@ -1,0 +1,225 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.w { padding: 1rem 0; font-family: var(--font-sans); }
+.plan-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin-bottom: 1.2rem; }
+.plan-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; cursor: pointer; transition: border-color .15s; }
+.plan-card.selected { border: 2px solid #185FA5; }
+.plan-head { padding: 10px 12px; text-align: center; }
+.plan-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+.plan-sub { font-size: 11px; color: var(--color-text-secondary); }
+.plan-body { padding: 10px 12px; }
+.tier-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.tier-row:last-child { border-bottom: none; }
+.tier-label { font-size: 12px; }
+.tier-amt { font-size: 13px; font-weight: 500; }
+.badge { display: inline-block; padding: 1px 7px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.b-aaa { background:#E1F5EE; color:#085041; }
+.b-aa  { background:#E6F1FB; color:#0C447C; }
+.b-a   { background:#FAEEDA; color:#633806; }
+.b-sup { background:#FDE8DF; color:#993C1D; }
+.plan-total { padding: 8px 12px; text-align: center; font-size: 12px; font-weight: 500; }
+.divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.1rem 0; }
+.stitle { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 10px; }
+.sub { font-size: 12px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 12px; }
+.formula-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.formula-part { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.formula-op { font-size: 16px; color: var(--color-text-tertiary); }
+.formula-note { font-size: 11px; color: var(--color-text-tertiary); width: 100%; margin-top: 2px; }
+.sim-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; }
+.sim-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 12px; }
+.sim-title { font-size: 12px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 10px; }
+.sim-row { margin-bottom: 8px; }
+.sim-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 3px; }
+.sim-input-row { display: flex; align-items: center; gap: 6px; }
+.sim-input-row input { width: 52px; padding: 3px 6px; font-size: 12px; border: 0.5px solid var(--color-border-secondary); border-radius: 4px; background: var(--color-background-primary); color: var(--color-text-primary); }
+.sim-unit { font-size: 11px; color: var(--color-text-secondary); }
+.sim-result { margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--color-border-tertiary); }
+.sim-per { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 2px; }
+.sim-amt { font-size: 18px; font-weight: 500; }
+.sim-note { font-size: 10px; color: var(--color-text-tertiary); margin-top: 2px; }
+.rule-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; margin-top: 1rem; }
+.rule-row { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; color: var(--color-text-secondary); padding: 3px 0; line-height: 1.6; }
+.rule-num { color: #185FA5; font-weight: 500; min-width: 16px; }
+@media(max-width:560px){ .plan-grid{grid-template-columns:1fr;} .sim-grid{grid-template-columns:1fr;} }
+</style>
+
+<div class="w">
+<div class="stitle">三種推薦方案（總預算皆 $300,000）</div>
+
+<div class="plan-grid">
+  <div class="plan-card selected" id="card-0" onclick="selectPlan(0)">
+    <div class="plan-head" style="background:#E6F1FB">
+      <div class="plan-name">方案一　均衡型</div>
+      <div class="plan-sub">比例平衡，最易說明</div>
+    </div>
+    <div class="plan-body">
+      <div class="tier-row"><span class="badge b-aaa">AAA</span><span class="tier-amt" style="color:#085041">$22,000</span></div>
+      <div class="tier-row"><span class="badge b-aa">AA</span><span class="tier-amt" style="color:#0C447C">$15,000</span></div>
+      <div class="tier-row"><span class="badge b-a">A</span><span class="tier-amt" style="color:#633806">$8,000</span></div>
+      <div class="tier-row"><span class="badge b-sup">+90萬</span><span class="tier-amt" style="color:#993C1D">+$5,000</span></div>
+      <div class="tier-row"><span class="badge b-sup">+100萬</span><span class="tier-amt" style="color:#993C1D">+$9,000</span></div>
+    </div>
+    <div class="plan-total" style="background:#E6F1FB;color:#185FA5">合計 $300,000</div>
+  </div>
+  <div class="plan-card" id="card-1" onclick="selectPlan(1)">
+    <div class="plan-head" style="background:#E1F5EE">
+      <div class="plan-name">方案二　頂尖重獎型</div>
+      <div class="plan-sub">強調高成長，激勵突破</div>
+    </div>
+    <div class="plan-body">
+      <div class="tier-row"><span class="badge b-aaa">AAA</span><span class="tier-amt" style="color:#085041">$28,000</span></div>
+      <div class="tier-row"><span class="badge b-aa">AA</span><span class="tier-amt" style="color:#0C447C">$13,000</span></div>
+      <div class="tier-row"><span class="badge b-a">A</span><span class="tier-amt" style="color:#633806">$6,000</span></div>
+      <div class="tier-row"><span class="badge b-sup">+90萬</span><span class="tier-amt" style="color:#993C1D">+$5,000</span></div>
+      <div class="tier-row"><span class="badge b-sup">+100萬</span><span class="tier-amt" style="color:#993C1D">+$9,000</span></div>
+    </div>
+    <div class="plan-total" style="background:#E1F5EE;color:#085041">合計 $300,000</div>
+  </div>
+  <div class="plan-card" id="card-2" onclick="selectPlan(2)">
+    <div class="plan-head" style="background:#FAEEDA">
+      <div class="plan-name">方案三　廣惠型</div>
+      <div class="plan-sub">差距縮小，照顧更多人</div>
+    </div>
+    <div class="plan-body">
+      <div class="tier-row"><span class="badge b-aaa">AAA</span><span class="tier-amt" style="color:#085041">$20,000</span></div>
+      <div class="tier-row"><span class="badge b-aa">AA</span><span class="tier-amt" style="color:#0C447C">$15,000</span></div>
+      <div class="tier-row"><span class="badge b-a">A</span><span class="tier-amt" style="color:#633806">$10,000</span></div>
+      <div class="tier-row"><span class="badge b-sup">+90萬</span><span class="tier-amt" style="color:#993C1D">+$4,000</span></div>
+      <div class="tier-row"><span class="badge b-sup">+100萬</span><span class="tier-amt" style="color:#993C1D">+$6,000</span></div>
+    </div>
+    <div class="plan-total" style="background:#FAEEDA;color:#633806">合計 $300,000</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="stitle">人頭制試算　— 輸入各店人數，看每人可領金額</div>
+<div class="sub">以「2月份在職達 15 天以上」的人數為基準。每人金額 = 該店總獎金 ÷ 在職資格人數。若有人離職，其份額不重分配。</div>
+
+<div class="formula-box">
+  <span class="formula-part" style="color:#185FA5">店總獎金</span>
+  <span class="formula-op">÷</span>
+  <span class="formula-part" style="color:#185FA5">2月在職資格人數</span>
+  <span class="formula-op">=</span>
+  <span class="formula-part">每人獎金</span>
+  <span class="formula-note">離職者份額不補發、不重分配 — 避免留任者意外獲得額外獎勵</span>
+</div>
+
+<div class="sim-grid">
+  <div class="sim-card">
+    <div class="sim-title"><span class="badge b-aaa">AAA</span> 門市</div>
+    <div class="sim-row">
+      <div class="sim-label">店總獎金</div>
+      <div style="font-size:14px;font-weight:500;color:#085041" id="aaa-store-amt">$22,000</div>
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">在職資格人數</div>
+      <div class="sim-input-row">
+        <input type="number" id="in-aaa" value="8" min="1" max="30" oninput="calcPerson()">
+        <span class="sim-unit">人</span>
+      </div>
+    </div>
+    <div class="sim-result">
+      <div class="sim-per">每人可領</div>
+      <div class="sim-amt" style="color:#085041" id="pp-aaa">$2,750</div>
+      <div class="sim-note" id="note-aaa">若1人離職 → 剩7人各領 $2,750，省回 $2,750</div>
+    </div>
+  </div>
+  <div class="sim-card">
+    <div class="sim-title"><span class="badge b-aa">AA</span> 門市</div>
+    <div class="sim-row">
+      <div class="sim-label">店總獎金</div>
+      <div style="font-size:14px;font-weight:500;color:#0C447C" id="aa-store-amt">$15,000</div>
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">在職資格人數</div>
+      <div class="sim-input-row">
+        <input type="number" id="in-aa" value="7" min="1" max="30" oninput="calcPerson()">
+        <span class="sim-unit">人</span>
+      </div>
+    </div>
+    <div class="sim-result">
+      <div class="sim-per">每人可領</div>
+      <div class="sim-amt" style="color:#0C447C" id="pp-aa">$2,143</div>
+      <div class="sim-note" id="note-aa">若1人離職 → 剩6人各領 $2,143，省回 $2,143</div>
+    </div>
+  </div>
+  <div class="sim-card">
+    <div class="sim-title"><span class="badge b-a">A</span> 門市（含加給範例）</div>
+    <div class="sim-row">
+      <div class="sim-label">店總獎金</div>
+      <div style="font-size:14px;font-weight:500;color:#633806" id="a-store-amt">$8,000</div>
+    </div>
+    <div class="sim-row">
+      <div class="sim-label">在職資格人數</div>
+      <div class="sim-input-row">
+        <input type="number" id="in-a" value="6" min="1" max="30" oninput="calcPerson()">
+        <span class="sim-unit">人</span>
+      </div>
+    </div>
+    <div class="sim-result">
+      <div class="sim-per">每人可領</div>
+      <div class="sim-amt" style="color:#633806" id="pp-a">$1,333</div>
+      <div class="sim-note" id="note-a">若1人離職 → 剩5人各領 $1,333，省回 $1,333</div>
+    </div>
+  </div>
+</div>
+
+<div class="rule-box">
+  <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">人頭制執行規則</div>
+  <div class="rule-row"><span class="rule-num">1</span><span>資格認定：2月份在職達 <b style="color:var(--color-text-primary)">15天以上</b> 的正職人員列入名單</span></div>
+  <div class="rule-row"><span class="rule-num">2</span><span>名單時點：以 <b style="color:var(--color-text-primary)">2月最後一天</b> 的在職名單為基準，由店長確認後送HR</span></div>
+  <div class="rule-row"><span class="rule-num">3</span><span>離職處理：名單確認後若有人離職，<b style="color:var(--color-text-primary)">其份額不補發、不重分配</b>，未發部分回收</span></div>
+  <div class="rule-row"><span class="rule-num">4</span><span>發放時限：業績確認後 <b style="color:var(--color-text-primary)">5個工作天內</b> 發放，縮短離職空窗</span></div>
+</div>
+</div>
+
+<script>
+const plans = [
+  { aaa:22000, aa:15000, a:8000,  s1:5000, s2:9000 },
+  { aaa:28000, aa:13000, a:6000,  s1:5000, s2:9000 },
+  { aaa:20000, aa:15000, a:10000, s1:4000, s2:6000 },
+];
+let cur = 0;
+
+function selectPlan(i) {
+  cur = i;
+  document.querySelectorAll('.plan-card').forEach((c,j) => {
+    c.classList.toggle('selected', i===j);
+    c.style.borderWidth = i===j ? '2px' : '0.5px';
+  });
+  calcPerson();
+}
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+
+function calcPerson() {
+  const p = plans[cur];
+  const nAAA = Math.max(1, parseInt(document.getElementById('in-aaa').value)||1);
+  const nAA  = Math.max(1, parseInt(document.getElementById('in-aa').value)||1);
+  const nA   = Math.max(1, parseInt(document.getElementById('in-a').value)||1);
+
+  // Show store total (use A example as base A, no supplement for simplicity)
+  document.getElementById('aaa-store-amt').textContent = fmt(p.aaa);
+  document.getElementById('aa-store-amt').textContent  = fmt(p.aa);
+  document.getElementById('a-store-amt').textContent   = fmt(p.a);
+
+  const ppAAA = p.aaa / nAAA;
+  const ppAA  = p.aa  / nAA;
+  const ppA   = p.a   / nA;
+
+  document.getElementById('pp-aaa').textContent = fmt(ppAAA);
+  document.getElementById('pp-aa').textContent  = fmt(ppAA);
+  document.getElementById('pp-a').textContent   = fmt(ppA);
+
+  document.getElementById('note-aaa').textContent =
+    nAAA > 1 ? `若1人離職 → 剩${nAAA-1}人各領 ${fmt(ppAAA)}，省回 ${fmt(ppAAA)}` : '只有1人，全額領取';
+  document.getElementById('note-aa').textContent  =
+    nAA  > 1 ? `若1人離職 → 剩${nAA-1}人各領 ${fmt(ppAA)}，省回 ${fmt(ppAA)}` : '只有1人，全額領取';
+  document.getElementById('note-a').textContent   =
+    nA   > 1 ? `若1人離職 → 剩${nA-1}人各領 ${fmt(ppA)}，省回 ${fmt(ppA)}` : '只有1人，全額領取';
+}
+
+calcPerson();
+</script>
